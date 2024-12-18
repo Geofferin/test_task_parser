@@ -1,8 +1,9 @@
+import csv
+
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import re
 import pandas as pd
-from tqdm.contrib.itertools import product
 from tqdm import tqdm
 
 
@@ -30,7 +31,6 @@ class CollectInfo:
         #Записали категорию продукта
         product_category = category_soup_first_page.find('h1').text
 
-        # Можно решить рекурсией
         # Находим номер последней страницы в категории
         pages = category_soup_first_page.find('span', class_='nums')
         if pages is not None:
@@ -107,14 +107,13 @@ class CollectInfo:
 
         # Запись всей информации из категории в файл
         for summary in category_summary:
-          df = pd.read_excel('output.xlsx')
+          data = pd.read_excel('output.xlsx')
           new_row = pd.DataFrame([summary], columns=columns)
-          df = pd.concat([df, new_row], ignore_index=True)
-          df.to_excel('output.xlsx', index=False)
+          data = pd.concat([data, new_row], ignore_index=True)
+          data.to_excel('output.xlsx', index=False)
 
     except Exception as e:
       print(f"Ошибка при парсинге: {e}")
-
 
 
 
